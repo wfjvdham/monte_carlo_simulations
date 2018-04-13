@@ -1,0 +1,2 @@
+# ethicoin
+Simulation using ethicoin
