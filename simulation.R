@@ -20,7 +20,7 @@ properties <- tibble(
 
 current_round <- 1
 current_player <- "A"
-coin = "normal"
+coin = "norm"
 
 set_current_player <- function(cp) {
   if(cp == "A") {
@@ -35,14 +35,9 @@ update_state <- function(cp, cr) {
     filter(name == cp, round == cr - 1) %>%
     select(amount) %>%
     pull(1)
-  affordable_business <- business %>%
+  business_to_buy <- business %>%
     filter(cost <= current_money) %>%
-    select(id) 
-  owned_business <- properties %>%
-    filter(name == cp) %>%
-    select(id)
-  business_to_buy <- affordable_business %>%
-    anti_join(owned_business, by = "id") %>%
+    select(id) %>%
     tail(1) %>%
     pull(1)
   cost <- 0
@@ -64,7 +59,21 @@ update_state <- function(cp, cr) {
   } else {
     
   }
-  new_money <- list(cp, current_money - cost + total_income, cr)
+  #new_money <- list(cp, current_money - cost + total_income, cr)
+  if (coin == "normal") {
+    new_money <- list(cp, current_money * 1.04, cr)
+  } else {
+    potatial_gain <- current_money * 0.04
+    #distribution is mu = 100 sd = 10
+    if (potatial_gain > 100) {
+      factor <- max((potatial_gain - 100) / 10, 1)
+      gain <- potatial_gain / factor
+    } else {
+      factor <- max((100 - potatial_gain) / 10, 1)
+      gain <- potatial_gain * factor
+    }
+    new_money <- list(cp, current_money + gain, cr)
+  }
   money <<- money %>%
     rbind(new_money)
 }
@@ -82,6 +91,6 @@ do_turn <- function(x) {
   current_player <<- set_current_player(current_player)
 }
 
-1:200 %>%
+1:2000 %>%
   walk(do_turn)
 show_plots()
