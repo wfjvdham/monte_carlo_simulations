@@ -1,0 +1,28 @@
+default:
+  n_iterations: 2000
+  n_paths: 200
+  income_percentage: 0.03
+  tax: !expr F
+  tax_limit: !expr Inf
+  tax_percentage: 0.03
+  ubi: !expr F
+
+with_tax:
+  tax: !expr T
+
+with_tax_limit:
+  tax: !expr T
+  tax_limit: 300
+
+ubi:
+  tax: !expr T
+  tax_limit: 300
+  ubi: !expr T
+  give_back_percentage: 0.09
+  tax_percentage: 0.033
+
+ubi_no_tax_limit:
+  tax: !expr T
+  ubi: !expr T
+  give_back_percentage: 0.09
+  tax_percentage: 0.033
